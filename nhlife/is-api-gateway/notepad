@@ -1,0 +1,42 @@
+사전작업
+1. 14일 CTI 상담사 삭제
+- UPDATE swm.t_user SET RETIREDDT = SYSTIMESTAMP WHERE CTICREATECD = 'Y';
+2. 14일 BAKE 상담사 삭제
+- UPDATE swm.t_user SET RETIREDDT = SYSTIMESTAMP WHERE BAKECREATECD = 'Y';
+3. 14일 프로세스 다운
+4. profiles 운영계로 변경
+- bake: production1 production2
+- apigw: prd
+5. 14일 데이터 Cleansing
+- IF_data_cleansing.sql
+
+1. 14일 망 전환 개발>운영
+2. BAKE Start
+3. 15일 망 전환 후 NAS 디렉토리 확인
+- ls /fileif/cb/DAY/stat_info (CB_STATS_INFO)
+- ls /fileif/cb/DAY/stat_info (CM_STATS_INFO)
+- ls /fileif/sa/DAY/holiday_info (HOL_INFO)
+- ls /fileif/ct/DAY/CC/CB (SMS_SEND_RESULT)
+- ls /fileif/sa/DAY/WM/WFMS11
+- ls /fileif/wm/DAY/SA/WFMS33
+- ls /fileif/sa/DAY/WM/WFMS10
+- ls /fileif/sa/DAY/WM/WFMS32
+- ls /fileif/sa/DAY/WM/WFMS28
+- ls /fileif/sa/DAY/WM/WFMS09
+- ls /fileif/sa/DAY/WM/WFMS37
+- ls /fileif/sa/DAY/WM/WFMS21
+- ls /fileif/wm/DAY/SA/WFMS35
+4. 15일 망 전환 후 방화벽 확인 작업
+- nc -zv 10.20.48.81 8988 (EAI-P)
+- nc -zv 10.20.48.82 8988 (EAI-B)
+- nc -zv 10.20.204.54 1621 (DB-P)
+- nc -zv 10.20.204.56 1621 (DB-B)
+- curl http://10.20.52.80:8085/cc/AutoLginChk.do (APPM-CS)
+- curl http://10.20.52.80:8085/tm/AutoLginChk.do (APPM-TM)
+- nc -zv 10.20.204.26 7000 (TTS-P)
+- nc -zv 10.20.204.27 7000 (TTS-B)
+
+5. 15일 18시 스킬 추출 
+- 스킬그룹추출_v1.0_20250508.sql
+
+l,.A9BXmg4

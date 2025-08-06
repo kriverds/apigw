@@ -1,0 +1,67 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.soluvis.ds.apigw.v1.biz.cti.winker.mapper.CtiWinkerMapper">
+	
+	<select id="selectCheckCtiUser" parameterType="Map" resultType="CamelHashMap">
+		SELECT syskind, userid, name, peripheralnumber AS cti_login_id, cticreatecd  FROM swm.t_user 
+		WHERE cticreatecd = 'N' 
+		AND (retireddt IS NULL OR retireddt > SYSTIMESTAMP)
+		AND (ctiuseyn = 'Y' OR ctiuseyn = 'X')
+		AND peripheralnumber IS NOT NULL
+		UNION ALL
+		SELECT syskind, userid, name, peripheralnumber AS cti_login_id, cticreatecd  FROM swm.t_user 
+		WHERE cticreatecd = 'Y' 
+		AND (retireddt <![CDATA[<]]> SYSTIMESTAMP)
+	</select>
+	<update id="updateCtiCreated">
+		UPDATE swm.t_user SET 
+			cticreatecd = 'Y'
+		WHERE userid = #{userid}
+		AND (retireddt IS NULL OR retireddt > SYSTIMESTAMP)
+		AND peripheralnumber IS NOT NULL
+	</update>
+	<update id="updateCtiDeleted">
+		UPDATE swm.t_user SET 
+			cticreatecd = 'N'
+		WHERE userid = #{userid}
+		AND (retireddt <![CDATA[<]]> SYSTIMESTAMP)
+	</update>
+	
+	<select id="selectUsersHaveSkill" parameterType="Map" resultType="CamelHashMap">
+		SELECT userid, skill_dbid, level_ AS skill_level, person_dbid
+		FROM cc.cfg_skill_level a, cc.cfg_person b, swm.t_user c
+		WHERE a.person_dbid = b.DBID 
+		AND b.employee_id = c.userid
+		AND c.cticreatecd = 'Y'
+		and skill_dbid = #{skill}
+		and syskind = #{syskind}
+	</select>
+	
+	<select id="selectUserSkills" parameterType="Map" resultType="CamelHashMap">
+		SELECT userid, skill_dbid, level_ AS skill_level, person_dbid
+		FROM cc.cfg_skill_level a, cc.cfg_person b, swm.t_user c, cc.cfg_skill d
+		WHERE a.person_dbid = b.DBID 
+		AND a.skill_dbid = d.dbid
+		AND d.name != 'NHLIFE'
+		AND b.employee_id = c.userid
+		AND c.cticreatecd = 'Y'
+		and userid = #{userid}
+		and syskind = #{syskind}
+	</select>
+	
+	<select id="selectPersonDbid" parameterType="Map" resultType="CamelHashMap">
+		SELECT userid, dbid FROM swm.t_user a, cc.cfg_person b
+		WHERE a.userid = b.employee_id
+		and syskind = #{syskind}
+		AND userid IN(
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>)
+	</select>
+	
+	<select id="selectDummySkillId" resultType="String">
+		SELECT dbid FROM cc.cfg_skill WHERE name = 'NHLIFE'
+	</select>
+</mapper>

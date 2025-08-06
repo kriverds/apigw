@@ -1,0 +1,89 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.soluvis.ds.apigw.v1.biz.chat.eai.mapper.ChatEaiMapper">
+	<insert id="insertEaiChatResult15minTemp" parameterType="Map">
+		INSERT ALL
+		<foreach collection="list" item="item" separator="">
+			INTO swm.t_merge_temp (val1, val2, val3, val4, val5, val6, num1, num2, num3, num4, num5, num6)
+			VALUES (#{domain}, #{nodeAlias}, #{item.date}, #{item.time}, #{item.accountGroupId}, #{item.accountGroupName},
+			#{item.inCnt}, #{item.callbackCnt}, #{item.failInCnt}, #{item.totalAnswerCnt}, #{item.totalNotAnswerCnt}, #{item.serviceLevelCnt})
+		</foreach>
+		SELECT * FROM dual
+	</insert>
+	<update id="mergeEaiChatResult15min">
+		MERGE INTO swm.t_eaichatresult_15min trg
+		USING 
+			(SELECT
+				val1					AS domain,
+				val2					AS nodealias,
+				val3					AS "DATE",
+				val4					AS "TIME",
+				num1					AS incnt,
+				num2					AS callbackcnt,
+				num3					AS failincnt,
+				num4					AS totalanswercnt,
+				num5					AS totalnotanswercnt,
+				num6					AS servicelevelcnt,
+				val5					AS accountgroupid,
+				val6					AS accountgroupname,
+				SYSTIMESTAMP			AS lastupdatedate
+			FROM swm.t_merge_temp) src
+		ON (	src.domain 				= trg.domain  
+			AND src."DATE" 				= trg."DATE"
+			AND src."TIME" 				= trg."TIME" 
+			AND src.accountgroupid 		= trg.accountgroupid)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.nodealias    		= src.nodealias,
+				trg.incnt    			= src.incnt,
+				trg.callbackcnt    		= src.callbackcnt,
+				trg.failincnt    		= src.failincnt,
+				trg.totalanswercnt    	= src.totalanswercnt,
+				trg.totalnotanswercnt   = src.totalnotanswercnt,
+				trg.servicelevelcnt    	= src.servicelevelcnt,
+				trg.accountgroupname    = src.accountgroupname,
+				trg.lastupdatedate		= src.lastupdatedate,
+				trg.lastmodifydate 		= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				domain,
+				nodealias,
+				"DATE",
+				"TIME",
+				incnt,
+				callbackcnt,
+				failincnt,
+				totalanswercnt,
+				totalnotanswercnt,
+				servicelevelcnt,
+				accountgroupname,
+				accountgroupid,
+				lastupdatedate,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.domain,
+				src.nodealias,
+				src."DATE",
+				src."TIME",
+				src.incnt,
+				src.callbackcnt,
+				src.failincnt,
+				src.totalanswercnt,
+				src.totalnotanswercnt,
+				src.servicelevelcnt,
+				src.accountgroupname,
+				src.accountgroupid,
+				src.lastupdatedate,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	
+	<insert id="callAggChatStat" parameterType="Map">
+		CALL swm.p_set_chat(#{sdt}, #{edt})
+	</insert>
+</mapper>

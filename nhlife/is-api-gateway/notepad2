@@ -1,0 +1,47 @@
+$.each($(a), function(idx,obj){
+    var _a = $(a).eq(idx);
+    var _aa = _a[0].outerHTML;
+    if(_aa.indexOf('합계') > -1) {
+        console.log('합계 true');
+        
+    } else if(_aa.indexOf('평균') > -1) {
+        console.log('평균 true');
+    }
+    console.log(_a[0].outerHTML);
+});
+
+this.exportExcel=function(e){var _this=this;var bodyStr='';$.each($(GRID.body.getExcelString.call(_this)).filter('tr'), function(idx,obj){var $child = $(obj);var childOuterHTML = $child[0].outerHTML;if(childOuterHTML.indexOf('합계') > -1) {childOuterHTML = childOuterHTML.replace('<tr>', '<tr style="background-color:#d6edf6;">');} else if(childOuterHTML.indexOf('평균') > -1) {childOuterHTML = childOuterHTML.replace('<tr>', '<tr style="background-color:#aabbcc;">');}bodyStr += childOuterHTML;});var f=[];f.push('<table border="1">');f.push(r.header.getExcelString.call(this));f.push(bodyStr);f.push("</table>");if("undefined"===typeof e)return f.join("");r.excel.export.call(this,[f.join("")],e);return this};
+
+this.exportExcel = function (_fileName) {
+            	var _this = this;
+            	
+            	var bodyStr = '';
+            	$.each($(GRID.body.getExcelString.call(_this)).filter('tr'), function(idx,obj){
+            	    var $child = $(obj);
+            	    var childOuterHTML = $child[0].outerHTML;
+            	    if(childOuterHTML.indexOf('합계') > -1) {
+            	        console.log('합계 true');
+            	        childOuterHTML = childOuterHTML.replace('<tr>', '<tr style="background-color:#d6edf6;">');
+            	    } else if(childOuterHTML.indexOf('평균') > -1) {
+            	        console.log('평균 true');
+            	        childOuterHTML = childOuterHTML.replace('<tr>', '<tr style="background-color:#aabbcc;">');
+            	    }
+            	    bodyStr += childOuterHTML;
+            	});
+            	console.log(bodyStr);
+            	
+                var table = [];
+                table.push('<table border="1">');
+                table.push(GRID.header.getExcelString.call(this));
+//                table.push(GRID.body.getExcelString.call(this));
+                table.push(bodyStr);
+                table.push('</table>');
+
+                if (typeof _fileName === "undefined") {
+                    return table.join('');
+                } else {
+                    GRID.excel.export.call(this, [table.join('')], _fileName);
+                }
+
+                return this;
+            };

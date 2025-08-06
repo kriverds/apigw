@@ -1,0 +1,361 @@
+{
+  "groups": [
+    {
+      "name": "db.config",
+      "type": "javax.sql.DataSource",
+      "sourceType": "com.soluvis.ds.apigw.v1.application.config.DataSourceConfig",
+      "sourceMethod": "javax.sql.DataSource dbDataSource() "
+    },
+    {
+      "name": "nas.chatbot",
+      "type": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties"
+    },
+    {
+      "name": "nas.chatbot.cb-stats-info",
+      "type": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CbStatsInfo",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties.CbStatsInfo cbStatsInfo() "
+    },
+    {
+      "name": "nas.chatbot.cm-stats-info",
+      "type": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CmStatsInfo",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties.CmStatsInfo cmStatsInfo() "
+    },
+    {
+      "name": "nas.chatbot.hol-info",
+      "type": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$HolInfo",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties.HolInfo holInfo() "
+    },
+    {
+      "name": "nas.chatbot.sms-send-result",
+      "type": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$SmsSendResult",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties.SmsSendResult smsSendResult() "
+    },
+    {
+      "name": "nas.wfms",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties"
+    },
+    {
+      "name": "nas.wfms.cd-inf",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$CdInf",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.CdInf cdInf() "
+    },
+    {
+      "name": "nas.wfms.group-limit-biz-kind",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$GroupLimitBizKind",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.GroupLimitBizKind groupLimitBizKind() "
+    },
+    {
+      "name": "nas.wfms.sum-agent-day",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgentDay",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.SumAgentDay sumAgentDay() "
+    },
+    {
+      "name": "nas.wfms.sum-agent30min",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgent30min",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.SumAgent30min sumAgent30min() "
+    },
+    {
+      "name": "nas.wfms.sum-chat-group-day",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumChatGroupDay",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.SumChatGroupDay sumChatGroupDay() "
+    },
+    {
+      "name": "nas.wfms.sum-ho30min",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumHo30min",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.SumHo30min sumHo30min() "
+    },
+    {
+      "name": "nas.wfms.sum-mrp-month",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumMrpMonth",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.SumMrpMonth sumMrpMonth() "
+    },
+    {
+      "name": "nas.wfms.sum-reason30min",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumReason30min",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.SumReason30min sumReason30min() "
+    },
+    {
+      "name": "nas.wfms.user-evlt",
+      "type": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$UserEvlt",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties",
+      "sourceMethod": "public com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties.UserEvlt userEvlt() "
+    }
+  ],
+  "properties": [
+    {
+      "name": "nas.chatbot.cb-stats-info.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CbStatsInfo"
+    },
+    {
+      "name": "nas.chatbot.cb-stats-info.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CbStatsInfo"
+    },
+    {
+      "name": "nas.chatbot.cb-stats-info.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CbStatsInfo"
+    },
+    {
+      "name": "nas.chatbot.cb-stats-info.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CbStatsInfo"
+    },
+    {
+      "name": "nas.chatbot.cm-stats-info.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CmStatsInfo"
+    },
+    {
+      "name": "nas.chatbot.cm-stats-info.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CmStatsInfo"
+    },
+    {
+      "name": "nas.chatbot.cm-stats-info.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CmStatsInfo"
+    },
+    {
+      "name": "nas.chatbot.cm-stats-info.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$CmStatsInfo"
+    },
+    {
+      "name": "nas.chatbot.hol-info.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$HolInfo"
+    },
+    {
+      "name": "nas.chatbot.hol-info.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$HolInfo"
+    },
+    {
+      "name": "nas.chatbot.hol-info.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$HolInfo"
+    },
+    {
+      "name": "nas.chatbot.hol-info.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$HolInfo"
+    },
+    {
+      "name": "nas.chatbot.sms-send-result.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$SmsSendResult"
+    },
+    {
+      "name": "nas.chatbot.sms-send-result.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$SmsSendResult"
+    },
+    {
+      "name": "nas.chatbot.sms-send-result.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$SmsSendResult"
+    },
+    {
+      "name": "nas.chatbot.sms-send-result.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.chatbot.nas.config.ChatbotNasProperties$SmsSendResult"
+    },
+    {
+      "name": "nas.wfms.cd-inf.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$CdInf"
+    },
+    {
+      "name": "nas.wfms.cd-inf.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$CdInf"
+    },
+    {
+      "name": "nas.wfms.cd-inf.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$CdInf"
+    },
+    {
+      "name": "nas.wfms.cd-inf.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$CdInf"
+    },
+    {
+      "name": "nas.wfms.group-limit-biz-kind.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$GroupLimitBizKind"
+    },
+    {
+      "name": "nas.wfms.group-limit-biz-kind.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$GroupLimitBizKind"
+    },
+    {
+      "name": "nas.wfms.group-limit-biz-kind.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$GroupLimitBizKind"
+    },
+    {
+      "name": "nas.wfms.group-limit-biz-kind.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$GroupLimitBizKind"
+    },
+    {
+      "name": "nas.wfms.sum-agent-day.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgentDay"
+    },
+    {
+      "name": "nas.wfms.sum-agent-day.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgentDay"
+    },
+    {
+      "name": "nas.wfms.sum-agent-day.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgentDay"
+    },
+    {
+      "name": "nas.wfms.sum-agent-day.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgentDay"
+    },
+    {
+      "name": "nas.wfms.sum-agent30min.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgent30min"
+    },
+    {
+      "name": "nas.wfms.sum-agent30min.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgent30min"
+    },
+    {
+      "name": "nas.wfms.sum-agent30min.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgent30min"
+    },
+    {
+      "name": "nas.wfms.sum-agent30min.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumAgent30min"
+    },
+    {
+      "name": "nas.wfms.sum-chat-group-day.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumChatGroupDay"
+    },
+    {
+      "name": "nas.wfms.sum-chat-group-day.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumChatGroupDay"
+    },
+    {
+      "name": "nas.wfms.sum-chat-group-day.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumChatGroupDay"
+    },
+    {
+      "name": "nas.wfms.sum-chat-group-day.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumChatGroupDay"
+    },
+    {
+      "name": "nas.wfms.sum-ho30min.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumHo30min"
+    },
+    {
+      "name": "nas.wfms.sum-ho30min.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumHo30min"
+    },
+    {
+      "name": "nas.wfms.sum-ho30min.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumHo30min"
+    },
+    {
+      "name": "nas.wfms.sum-ho30min.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumHo30min"
+    },
+    {
+      "name": "nas.wfms.sum-mrp-month.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumMrpMonth"
+    },
+    {
+      "name": "nas.wfms.sum-mrp-month.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumMrpMonth"
+    },
+    {
+      "name": "nas.wfms.sum-mrp-month.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumMrpMonth"
+    },
+    {
+      "name": "nas.wfms.sum-mrp-month.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumMrpMonth"
+    },
+    {
+      "name": "nas.wfms.sum-reason30min.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumReason30min"
+    },
+    {
+      "name": "nas.wfms.sum-reason30min.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumReason30min"
+    },
+    {
+      "name": "nas.wfms.sum-reason30min.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumReason30min"
+    },
+    {
+      "name": "nas.wfms.sum-reason30min.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$SumReason30min"
+    },
+    {
+      "name": "nas.wfms.user-evlt.directory",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$UserEvlt"
+    },
+    {
+      "name": "nas.wfms.user-evlt.extension",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$UserEvlt"
+    },
+    {
+      "name": "nas.wfms.user-evlt.filename",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$UserEvlt"
+    },
+    {
+      "name": "nas.wfms.user-evlt.pattern",
+      "type": "java.lang.String",
+      "sourceType": "com.soluvis.ds.apigw.v1.biz.wfms.nas.config.WfmsNasProperties$UserEvlt"
+    }
+  ],
+  "hints": []
+}

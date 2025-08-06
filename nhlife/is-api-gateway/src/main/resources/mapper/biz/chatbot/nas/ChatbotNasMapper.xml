@@ -1,0 +1,481 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.soluvis.ds.apigw.v1.biz.chatbot.nas.mapper.ChatbotNasMapper">
+	
+	<insert id="insertCbStatsInfoTemp" parameterType="Map">
+		INSERT ALL
+		<foreach collection="list" item="item" separator="">
+			INTO swm.t_merge_temp (val1, val2, val3, val4, val5, num1, val6, val7, val8)
+			VALUES (#{item.userKey}, #{item.chnlName}, #{item.intentLv1}, #{item.intentLv2}, #{item.intentLv3}, 
+			#{item.questionCnt}, #{item.callcenterConnYn}, #{item.frstConnDatm}, #{item.finlRespDatm})
+		</foreach>
+		SELECT * FROM dual
+	</insert>
+	<update id="mergeCbStatsInfo">
+		MERGE INTO swm.t_naschatbot_cb_stats_info trg
+		USING 
+			(SELECT
+				val1					AS user_key,
+				val2					AS chnl_name,
+				val3					AS intent_lv1,
+				val4					AS intent_lv2,
+				val5					AS intent_lv3,
+				num1					AS question_cnt,
+				val6					AS callcenter_conn_yn,
+				val7					AS frst_conn_datm,
+				val8					AS finl_resp_datm
+			FROM swm.t_merge_temp) src
+		ON (	src.user_key 			= trg.user_key  
+			AND src.frst_conn_datm 		= trg.frst_conn_datm
+			AND src.finl_resp_datm 		= trg.finl_resp_datm)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.chnl_name    		= src.chnl_name,
+				trg.intent_lv1    		= src.intent_lv1,
+				trg.intent_lv2    		= src.intent_lv2,
+				trg.intent_lv3    		= src.intent_lv3,
+				trg.question_cnt    	= src.question_cnt,
+				trg.callcenter_conn_yn  = src.callcenter_conn_yn,
+				trg.lastmodifydate 		= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				user_key,
+				chnl_name,
+				intent_lv1,
+				intent_lv2,
+				intent_lv3,
+				question_cnt,
+				callcenter_conn_yn,
+				frst_conn_datm,
+				finl_resp_datm,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.user_key,
+				src.chnl_name,
+				src.intent_lv1,
+				src.intent_lv2,
+				src.intent_lv3,
+				src.question_cnt,
+				src.callcenter_conn_yn,
+				src.frst_conn_datm,
+				src.finl_resp_datm,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	
+	<insert id="insertCmStatsInfoTemp" parameterType="Map">
+		INSERT ALL
+		<foreach collection="list" item="item" separator="">
+			INTO swm.t_merge_temp (val1, val2, val3, val4, num1, val5, num2, val6, val7, val8, num3, val9, val10)
+			VALUES (#{item.cmpKey}, #{item.cmpType}, #{item.cmpId}, #{item.execCmpId}, #{item.execCmpCnt}, 
+					#{item.custNo}, #{item.callListSeqno}, #{item.frstConnDatm}, #{item.finlConnDatm}, #{item.finlRespDatm}, 
+					#{item.respCnt}, #{item.fcYesYn}, #{item.cmpltYn})
+		</foreach>
+		SELECT * FROM dual
+	</insert>
+	<update id="mergeCmStatsInfo" parameterType="Map">
+		MERGE INTO swm.t_naschatbot_cm_stats_info trg
+		USING 
+			(SELECT
+				val1					AS cmp_key,
+				val2					AS cmp_type,
+				val3					AS cmp_id,
+				val4					AS exec_cmp_id,
+				num1					AS exec_cmp_cnt,
+				val5					AS cust_no,
+				num2					AS call_list_seqno,
+				val6					AS frst_conn_datm,
+				val7					AS finl_conn_datm,
+				val8					AS finl_resp_datm,
+				num3					AS resp_cnt,
+				val9					AS fc_yes_yn,
+				val10					AS cmplt_yn
+			FROM swm.t_merge_temp) src
+		ON (	src.cmp_key 			= trg.cmp_key  
+			AND src.cmp_id 				= trg.cmp_id
+			AND src.cust_no 			= trg.cust_no
+			AND src.call_list_seqno 	= trg.call_list_seqno)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.cmp_type    		= src.cmp_type,
+				trg.exec_cmp_id    		= src.exec_cmp_id,
+				trg.exec_cmp_cnt    	= src.exec_cmp_cnt,
+				trg.frst_conn_datm    	= src.frst_conn_datm,
+				trg.finl_conn_datm    	= src.finl_conn_datm,
+				trg.finl_resp_datm    	= src.finl_resp_datm,
+				trg.resp_cnt    		= src.resp_cnt,
+				trg.fc_yes_yn    		= src.fc_yes_yn,
+				trg.cmplt_yn    		= src.cmplt_yn,
+				trg.mfy_dt	 			= SYSTIMESTAMP,
+				trg.lastmodifydate 		= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				cmp_key,
+				cmp_type,
+				cmp_id,
+				exec_cmp_id,
+				exec_cmp_cnt,
+				cust_no,
+				call_list_seqno,
+				frst_conn_datm,
+				finl_conn_datm,
+				finl_resp_datm,
+				resp_cnt,
+				fc_yes_yn,
+				cmplt_yn,
+				mfy_dt,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.cmp_key,
+				src.cmp_type,
+				src.cmp_id,
+				src.exec_cmp_id,
+				src.exec_cmp_cnt,
+				src.cust_no,
+				src.call_list_seqno,
+				src.frst_conn_datm,
+				src.finl_conn_datm,
+				src.finl_resp_datm,
+				src.resp_cnt,
+				src.fc_yes_yn,
+				src.cmplt_yn,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	
+	<update id="mergeSumChatbotCampaign" parameterType="Map">
+		MERGE INTO swm.t_sum_chatbot_campaign trg
+		USING 
+			(SELECT 
+				cmp_type,
+				cmp_id,
+				dd,
+				tm,
+				COUNT(1) AS snd_cnt,
+				SUM(CASE WHEN rslt_cd='Y' THEN 1 ELSE 0 END) AS arr_cnt,
+				SUM(CASE WHEN finl_resp_datm != '' AND finl_resp_datm IS NOT NULL THEN 1 ELSE 0 END) AS resp_cnt,
+			  	SUM(CASE WHEN cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS succ_cnt,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 10 AND resp_tm > 0 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm10,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 20 AND resp_tm > 10 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm20,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 30 AND resp_tm > 20 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm30,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 40 AND resp_tm > 30 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm40,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 50 AND resp_tm > 40 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm50,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 60 AND resp_tm > 50 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm60,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 120 AND resp_tm > 60 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm120,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 180 AND resp_tm > 120 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm180,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 240 AND resp_tm > 180 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm240,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 300 AND resp_tm > 240 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm300,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 360 AND resp_tm > 300 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm360,
+			  	SUM(CASE WHEN resp_tm > 360 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm360over
+			FROM (
+				SELECT 
+					a.cmp_type,
+					CASE WHEN finl_resp_datm IS NULL THEN '' ELSE finl_resp_datm END AS finl_resp_datm,
+					a.cmp_id,
+					SUBSTR(a.snd_req_dtm,1,8) AS dd,
+					SUBSTR(a.snd_req_dtm,9,2) AS tm,
+					rslt_cd,
+					CASE WHEN resp_cnt IS NULL THEN 0 ELSE resp_cnt END AS resp_cnt,
+					CASE WHEN cmplt_yn IS NULL THEN '' ELSE cmplt_yn END AS cmplt_yn,
+					CASE WHEN finl_resp_datm != '' AND finl_resp_datm IS NOT NULL AND snd_dtm != '' AND snd_dtm IS NOT NULL THEN (TO_DATE(snd_dtm,'YYYYMMDDHH24MISS') - TO_DATE(finl_resp_datm,'YYYYMMDDHH24MISS'))*24*60
+					ELSE 0 END AS resp_tm
+				FROM swm.t_naschatbot_sms_send_result a
+					LEFT OUTER JOIN swm.t_naschatbot_cm_stats_info b on (a.cmp_id=b.cmp_id AND a.cust_no=b.cust_no AND a.call_list_seqno=b.call_list_seqno)
+				WHERE EXISTS 
+					(
+						SELECT 1 
+						FROM swm.t_naschatbot_cm_stats_info c
+						WHERE a.cmp_id=c.cmp_id 
+						AND c.mfy_dt >= SYSTIMESTAMP-10
+					)
+				AND snd_req_dtm != ''
+			) t 
+			GROUP BY cmp_type, cmp_id, dd, tm) src
+		ON (	trg.cmp_type = src.cmp_type 
+			AND trg.cmp_id = src.cmp_id 
+			AND trg.dd = src.dd 
+			AND trg.tm = src.tm)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.snd_cnt 		= src.snd_cnt,
+				trg.arr_cnt 		= src.arr_cnt,
+				trg.resp_cnt 		= src.resp_cnt,
+				trg.succ_cnt 		= src.succ_cnt,
+				trg.tm10 			= src.tm10,
+				trg.tm20 			= src.tm20,
+				trg.tm30 			= src.tm30,
+				trg.tm40 			= src.tm40,
+				trg.tm50 			= src.tm50,
+				trg.tm60 			= src.tm60,
+				trg.tm120 			= src.tm120,
+				trg.tm180 			= src.tm180,
+				trg.tm240 			= src.tm240,
+				trg.tm300 			= src.tm300,
+				trg.tm360 			= src.tm360,
+				trg.tm360over 		= src.tm360over,
+				trg.lastmodifydate 	= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				cmp_type,
+				cmp_id,
+				dd,
+				tm,
+				snd_cnt,
+				arr_cnt,
+				resp_cnt,
+				succ_cnt,
+				tm10,
+				tm20,
+				tm30,
+				tm40,
+				tm50,
+				tm60,
+				tm120,
+				tm180,
+				tm240,
+				tm300,
+				tm360,
+				tm360over,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.cmp_type,
+				src.cmp_id,
+				src.dd,
+				src.tm,
+				src.snd_cnt,
+				src.arr_cnt,
+				src.resp_cnt,
+				src.succ_cnt,
+				src.tm10,
+				src.tm20,
+				src.tm30,
+				src.tm40,
+				src.tm50,
+				src.tm60,
+				src.tm120,
+				src.tm180,
+				src.tm240,
+				src.tm300,
+				src.tm360,
+				src.tm360over,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	<update id="mergeSumChatbotExecCampaign" parameterType="Map">
+		MERGE INTO swm.t_sum_chatbot_exec_campaign trg
+		USING 
+			(SELECT 
+				cmp_type,
+				cmp_id,
+				exec_cmp_id,
+				dd,
+				tm,
+				COUNT(1) AS snd_cnt,
+				SUM(CASE WHEN rslt_cd='Y' THEN 1 ELSE 0 END) AS arr_cnt,
+				SUM(CASE WHEN finl_resp_datm != '' AND finl_resp_datm IS NOT NULL THEN 1 ELSE 0 END) AS resp_cnt,
+			  	SUM(CASE WHEN cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS succ_cnt,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 10 AND resp_tm > 0 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm10,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 20 AND resp_tm > 10 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm20,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 30 AND resp_tm > 20 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm30,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 40 AND resp_tm > 30 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm40,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 50 AND resp_tm > 40 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm50,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 60 AND resp_tm > 50 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm60,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 120 AND resp_tm > 60 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm120,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 180 AND resp_tm > 120 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm180,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 240 AND resp_tm > 180 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm240,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 300 AND resp_tm > 240 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm300,
+			  	SUM(CASE WHEN resp_tm <![CDATA[<]]>= 360 AND resp_tm > 300 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm360,
+			  	SUM(CASE WHEN resp_tm > 360 AND cmplt_yn = 'Y' THEN 1 ELSE 0 END) AS tm360over
+			FROM (
+				SELECT 
+					a.cmp_type,
+					CASE WHEN finl_resp_datm IS NULL THEN '' ELSE finl_resp_datm END AS finl_resp_datm,
+					a.cmp_id,
+					a.exec_cmp_id,
+					SUBSTR(a.snd_req_dtm,1,8) AS dd,
+					SUBSTR(a.snd_req_dtm,9,2) AS tm,
+					rslt_cd,
+					CASE WHEN resp_cnt IS NULL THEN 0 ELSE resp_cnt END AS resp_cnt,
+					CASE WHEN cmplt_yn IS NULL THEN '' ELSE cmplt_yn END AS cmplt_yn,
+					CASE WHEN finl_resp_datm != '' AND finl_resp_datm IS NOT NULL AND snd_dtm != '' AND snd_dtm IS NOT NULL THEN (TO_DATE(snd_dtm,'YYYYMMDDHH24MISS') - TO_DATE(finl_resp_datm,'YYYYMMDDHH24MISS'))*24*60
+					ELSE 0 END AS resp_tm
+				FROM swm.t_naschatbot_sms_send_result a
+					LEFT OUTER JOIN swm.t_naschatbot_cm_stats_info b on (a.cmp_id=b.cmp_id AND a.exec_cmp_id=b.exec_cmp_id AND a.cust_no=b.cust_no AND a.call_list_seqno=b.call_list_seqno)
+				WHERE EXISTS 
+					(
+						SELECT 1 
+						FROM swm.t_naschatbot_cm_stats_info c
+						WHERE a.cmp_id=c.cmp_id 
+						AND a.exec_cmp_id=c.exec_cmp_id
+						AND c.mfy_dt >= SYSTIMESTAMP-10
+					)
+				AND snd_req_dtm != ''
+			) t 
+			GROUP BY cmp_type, cmp_id, exec_cmp_id, dd, tm) src
+		ON (	trg.cmp_type = src.cmp_type 
+			AND trg.cmp_id = src.cmp_id 
+			AND trg.exec_cmp_id = src.exec_cmp_id 
+			AND trg.dd = src.dd 
+			AND trg.tm = src.tm)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.snd_cnt 		= src.snd_cnt,
+				trg.arr_cnt 		= src.arr_cnt,
+				trg.resp_cnt 		= src.resp_cnt,
+				trg.succ_cnt 		= src.succ_cnt,
+				trg.tm10 			= src.tm10,
+				trg.tm20 			= src.tm20,
+				trg.tm30 			= src.tm30,
+				trg.tm40 			= src.tm40,
+				trg.tm50 			= src.tm50,
+				trg.tm60 			= src.tm60,
+				trg.tm120 			= src.tm120,
+				trg.tm180 			= src.tm180,
+				trg.tm240 			= src.tm240,
+				trg.tm300 			= src.tm300,
+				trg.tm360 			= src.tm360,
+				trg.tm360over 		= src.tm360over,
+				trg.lastmodifydate 	= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				cmp_type,
+				cmp_id,
+				exec_cmp_id,
+				dd,
+				tm,
+				snd_cnt,
+				arr_cnt,
+				resp_cnt,
+				succ_cnt,
+				tm10,
+				tm20,
+				tm30,
+				tm40,
+				tm50,
+				tm60,
+				tm120,
+				tm180,
+				tm240,
+				tm300,
+				tm360,
+				tm360over,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.cmp_type,
+				src.cmp_id,
+				src.exec_cmp_id,
+				src.dd,
+				src.tm,
+				src.snd_cnt,
+				src.arr_cnt,
+				src.resp_cnt,
+				src.succ_cnt,
+				src.tm10,
+				src.tm20,
+				src.tm30,
+				src.tm40,
+				src.tm50,
+				src.tm60,
+				src.tm120,
+				src.tm180,
+				src.tm240,
+				src.tm300,
+				src.tm360,
+				src.tm360over,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	
+	<select id="selectHolInfo" resultType="HolInfo">
+		SELECT
+			TO_CHAR(solar_dt, 'YYYYMMDD') AS holday,
+			TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISS') AS createdatm
+		FROM swm.t_appholiday
+		WHERE syskind='CS'
+		AND cntr_cd='CSL'
+		AND hld_yn='Y'
+		AND solar_dt <![CDATA[<]]> SYSTIMESTAMP+30 AND solar_dt >= SYSTIMESTAMP-30
+	</select>
+	
+	<insert id="insertSmsSendResultTemp"  parameterType="Map">
+		INSERT ALL
+		<foreach collection="list" item="item" separator="">
+			INTO swm.t_merge_temp (val1, val2, val3, val4, num1, val5, num2, val6, val7, val8)
+			VALUES (#{item.cmpKey}, #{item.cmpType}, #{item.cmpId}, #{item.execCmpId}, #{item.execCmpCnt}, #{item.custNo}, #{item.callListSeqno}, #{item.sndReqDtm}, #{item.sndDtm}, #{item.rsltCd})
+		</foreach>
+		SELECT * FROM dual
+	</insert>
+	<update id="mergeSmsSendResult">
+		MERGE INTO swm.t_naschatbot_sms_send_result trg
+		USING 
+			(SELECT
+				val1				AS cmp_key,
+				val2				AS cmp_type,
+				val3				AS cmp_id,
+				val4				AS exec_cmp_id,
+				num1				AS exec_cmp_cnt,
+				val5				AS cust_no,
+				num2				AS call_list_seqno,
+				val6				AS snd_req_dtm,
+				val7				AS snd_dtm,
+				val8				AS rslt_cd
+			FROM swm.t_merge_temp) src
+		ON (	src.cmp_key 			= trg.cmp_key)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.cmp_type    		= src.cmp_type,
+				trg.cmp_id    			= src.cmp_id,
+				trg.exec_cmp_id    		= src.exec_cmp_id,
+				trg.exec_cmp_cnt    	= src.exec_cmp_cnt,
+				trg.cust_no    			= src.cust_no,
+				trg.call_list_seqno    	= src.call_list_seqno,
+				trg.snd_req_dtm    		= src.snd_req_dtm,
+				trg.snd_dtm    			= src.snd_dtm,
+				trg.rslt_cd    			= src.rslt_cd,
+				trg.lastmodifydate 		= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				cmp_key,
+				cmp_type,
+				cmp_id,
+				exec_cmp_id,
+				exec_cmp_cnt,
+				cust_no,
+				call_list_seqno,
+				snd_req_dtm,
+				snd_dtm,
+				rslt_cd,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.cmp_key,
+				src.cmp_type,
+				src.cmp_id,
+				src.exec_cmp_id,
+				src.exec_cmp_cnt,
+				src.cust_no,
+				src.call_list_seqno,
+				src.snd_req_dtm,
+				src.snd_dtm,
+				src.rslt_cd,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+</mapper>

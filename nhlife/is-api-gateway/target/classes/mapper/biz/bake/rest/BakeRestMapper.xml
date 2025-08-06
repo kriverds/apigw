@@ -1,0 +1,28 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.soluvis.ds.apigw.v1.biz.bake.rest.mapper.BakeRestMapper">
+	
+	<select id="selectCheckBakeUser" parameterType="Map" resultType="CamelHashMap">
+		SELECT syskind, userid, name, userclascd, bakecreatecd FROM swm.t_user 
+		WHERE bakecreatecd = 'N' 
+		AND (retireddt IS NULL OR retireddt > SYSTIMESTAMP)
+		UNION ALL
+		SELECT syskind, userid, name, userclascd, bakecreatecd FROM swm.t_user 
+		WHERE bakecreatecd = 'Y' 
+		AND (retireddt <![CDATA[<]]> SYSTIMESTAMP)
+	</select>
+	<update id="updateBakeCreated">
+		UPDATE swm.t_user SET 
+			bakecreatecd = 'Y'
+		WHERE userid = #{userid}
+		AND (retireddt IS NULL OR retireddt > SYSTIMESTAMP)
+	</update>
+	<update id="updateBakeDeleted">
+		UPDATE swm.t_user SET 
+			bakecreatecd = 'N'
+		WHERE userid = #{userid}
+		AND (retireddt <![CDATA[<]]> SYSTIMESTAMP)
+	</update>
+</mapper>

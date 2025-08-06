@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="ROLLIN"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>D:\dev\logs\apigw\apigw.log</file>
+		<!-- <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>D:\dev\logs\croffle\croffle.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy> -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>D:\dev\logs\apigw\apigw.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+		</encoder>	
+	</appender>
+	
+	<logger name="jdbc" level="off"/>
+	<logger name="jdbc.sqlonly" level="off"/>
+	<logger name="jdbc.sqltiming" level="off"/>
+	<logger name="jdbc.audit" level="off"/>
+	<logger name="jdbc.resultset" level="off"/>
+	<logger name="jdbc.resultsettable" level="off"/>
+	<logger name="jdbc.connection" level="off"/>
+	
+	<root level="INFO">
+		<appender-ref ref="STDOUT"/>
+		<appender-ref ref="ROLLIN"/>
+	</root>
+</configuration>

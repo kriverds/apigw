@@ -1,0 +1,41 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.soluvis.ds.apigw.v1.biz.vars.eai.mapper.VarsEaiMapper">
+	
+	<select id="selectWaitCnt" parameterType="Map" resultType="CamelHashMap">
+		SELECT
+			a.mrp,
+			a.RouterCallsQNow AS wait_cust_cnt,
+			(CASE WHEN b.Time_GB in ('WT' ,'WT3') THEN 'Y' ELSE 'N' END) AS work_time_yn
+		from
+			(SELECT   vm.mrp,
+			         vm.mrpname,
+			         to_char(SUM(cs.inqueue), 'FM999,999,999') as RouterCallsQNow
+			FROM     swm.t_ivr_dg_map dm
+			         INNER JOIN swm.v_menu_visual_map vm
+			                 ON dm.dnis = vm.mrp
+			                AND dm.menu_code = vm.menucode
+			          LEFT JOIN swm.cskill cs
+			                 ON dm.dg_name = cs.split
+			WHERE    vm.mrp = #{MRP}
+			GROUP BY vm.mrp, vm.mrpname) a,
+			(SELECT  Time_GB
+			FROM	swm.t_TimeCheck a
+			WHERE	MRP = #{MRP}
+			and     substr(week_gb,1,1) = (
+						case when nvl((
+							SELECT  PHLD_YN 
+							FROM	swm.t_Holiday
+							WHERE	MRP = #{MRP}
+							AND		HolidayYear=TO_CHAR(SYSTIMESTAMP, 'YYYY') 
+							AND		HolidayMonthDay = TO_CHAR(SYSTIMESTAMP, 'MMDD') 
+						),'N') = 'Y' then 8 --'8_HOL'
+						else TO_NUMBER(to_char(SYSTIMESTAMP, 'D'))
+						end
+				    ) 
+			and		Stdt <![CDATA[<]]>= TO_CHAR(SYSTIMESTAMP, 'HH24MI') and Eddt > TO_CHAR(SYSTIMESTAMP, 'HH24MI')
+			AND rownum = 1) b
+	</select>
+</mapper>

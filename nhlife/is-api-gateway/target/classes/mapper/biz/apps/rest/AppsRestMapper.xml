@@ -1,0 +1,346 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.soluvis.ds.apigw.v1.biz.apps.rest.mapper.AppsRestMapper">
+	
+	<select id="selectUserSkill" parameterType="Map" resultType="UserSG">
+		SELECT 
+			sgcd AS sgcd, 
+			sgnm AS sgnm, 
+			NVL(level_,0) AS sglevel, 
+			NVL2(PERSON_DBID, 'Y', 'N') AS hasyn 
+		FROM 
+			(SELECT code AS sgcd, data1 AS sgnm
+			 FROM SWM.AX_COMMON_CODE_M accm 
+			 WHERE GROUP_CD  = 'CFG_SKILL_CD'
+			 AND #{SysKind} = SUBSTR(data1, 1,2)
+			 ORDER BY sort) b
+		LEFT OUTER JOIN
+			(SELECT person_dbid, skill_dbid, level_ 
+			 FROM cc.cfg_skill_level a, cc.cfg_person b
+			 WHERE a.person_dbid = b.dbid 
+			 AND employee_id = #{UserId}) c 
+		ON b.sgcd=c.skill_dbid
+	</select>
+	
+	<!-- 사용자 정보 저장 -->
+	<update id="mergeAppUser" parameterType="Map">
+		MERGE INTO swm.t_appuser trg
+		USING 
+			(SELECT 
+				#{SysKind} 		AS syskind, 
+				#{UserId} 		AS userid, 
+				#{KORN_NM} 		AS korn_nm, 
+				#{ENG_NM} 		AS eng_nm, 
+				#{Level1Cd} 	AS level1cd,
+				#{Level2Cd} 	AS level2cd,
+				#{Level3Cd} 	AS level3cd,
+				#{GRP_ATHT} 	AS grp_atht,
+				#{ORG_GRD} 		AS org_grd,
+				#{BIZ_CLAS_CD} 	AS biz_clas_cd,
+				#{ETCO_DT} 		AS etco_dt,
+				#{LVCO_DT} 		AS lvco_dt,
+				#{EXT_NO} 		AS ext_no,
+				#{CTI_LGIN_ID} 	AS cti_lgin_id,
+				#{CTI_USE_YN} 	AS cti_use_yn,
+				#{MSGR_USE_YN} 	AS msgr_use_yn
+			FROM dual) src
+		ON (	src.syskind = trg.syskind 
+			AND src.userid 	= trg.userid)
+		WHEN MATCHED THEN
+			UPDATE SET 	
+				trg.korn_nm 		= src.korn_nm,
+				trg.eng_nm 			= src.eng_nm,
+				trg.level1cd 		= src.level1cd,
+				trg.level2cd 		= src.level2cd,
+				trg.level3cd 		= src.level3cd,
+				trg.grp_atht 		= src.grp_atht,
+				trg.org_grd 		= src.org_grd,
+				trg.biz_clas_cd 	= src.biz_clas_cd,
+				trg.etco_dt 		= src.etco_dt,
+				trg.lvco_dt 		= src.lvco_dt,
+				trg.ext_no 			= src.ext_no,
+				trg.cti_lgin_id 	= src.cti_lgin_id,
+				trg.cti_use_yn 		= src.cti_use_yn,
+				trg.msgr_use_yn 	= src.msgr_use_yn,
+				trg.lastmodifydate 	= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				syskind, 
+				userid,
+				korn_nm,
+				eng_nm,
+				level1cd,
+				level2cd,
+				level3cd,
+				grp_atht,
+				org_grd,
+				biz_clas_cd,
+				etco_dt,
+				lvco_dt,
+				ext_no,
+				cti_lgin_id,
+				cti_use_yn,
+				msgr_use_yn,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.syskind, 
+				src.userid,
+				src.korn_nm,
+				src.eng_nm,
+				src.level1cd,
+				src.level2cd,
+				src.level3cd,
+				src.grp_atht,
+				src.org_grd,
+				src.biz_clas_cd,
+				src.etco_dt,
+				src.lvco_dt,
+				src.ext_no,
+				src.cti_lgin_id,
+				src.cti_use_yn,
+				src.msgr_use_yn,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	<update id="mergeUser" parameterType="Map">
+		MERGE INTO swm.t_user trg
+		USING 
+			(SELECT 
+				#{SysKind} 		AS syskind, 
+				#{UserId} 		AS userid, 
+				#{KORN_NM} 		AS korn_nm, 
+				#{ENG_NM} 		AS eng_nm, 
+				#{Level1Cd} 	AS level1cd,
+				#{Level2Cd} 	AS level2cd,
+				#{Level3Cd} 	AS level3cd,
+				#{GRP_ATHT} 	AS grp_atht,
+				#{ORG_GRD} 		AS org_grd,
+				#{BIZ_CLAS_CD} 	AS biz_clas_cd,
+				#{ETCO_DT} 		AS etco_dt,
+				#{LVCO_DT} 		AS lvco_dt,
+				#{EXT_NO} 		AS ext_no,
+				#{CTI_LGIN_ID} 	AS cti_lgin_id,
+				#{CTI_USE_YN} 	AS cti_use_yn,
+				#{MSGR_USE_YN} 	AS msgr_use_yn
+			FROM dual) src
+		ON (	src.syskind = trg.syskind 
+			AND src.userid 	= trg.userid)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.name 			= src.korn_nm,
+				trg.engname 		= src.eng_nm,
+				trg.level1cd 		= src.level1cd,
+				trg.level2cd 		= src.level2cd,
+				trg.level3cd 		= src.level3cd,
+				trg.userclascd 		= src.grp_atht,
+				trg.orgclascd 		= src.org_grd,
+				trg.bizclascd 		= src.biz_clas_cd,
+				trg.joindt 			= TO_TIMESTAMP(src.etco_dt, 'YYYY-MM-DD'),
+				trg.retireddt 		= (CASE WHEN (src.lvco_dt IS NULL OR src.lvco_dt = '') THEN null else TO_TIMESTAMP(src.lvco_dt, 'YYYY-MM-DD') END),
+				trg.extno 			= src.ext_no,
+				trg.peripheralnumber= (CASE WHEN (src.cti_lgin_id = '' AND src.lvco_dt != '') THEN peripheralnumber
+											WHEN (REGEXP_LIKE(src.cti_lgin_id, '^[0-9]+$')) THEN src.cti_lgin_id
+											ELSE null END),
+				trg.ctiuseyn 		= src.cti_use_yn,
+				trg.msguseyn 		= src.msgr_use_yn,
+				trg.orgcd 			= src.level3cd,
+				trg.deleted			= (CASE WHEN (src.lvco_dt IS NULL OR src.lvco_dt = '') THEN 'N'
+											WHEN TO_TIMESTAMP(src.lvco_dt, 'YYYY-MM-DD') > SYSTIMESTAMP THEN 'N'
+											ELSE 'Y' END),
+				trg.loginable		= (CASE WHEN (src.lvco_dt IS NULL OR src.lvco_dt = '') THEN 'Y'
+											WHEN TO_TIMESTAMP(src.lvco_dt, 'YYYY-MM-DD') > SYSTIMESTAMP THEN 'Y'
+											ELSE 'N' END),
+				trg.lastmodifydate 	= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				syskind, 
+				userid,
+				name,
+				engname,
+				level1cd,
+				level2cd,
+				level3cd,
+				userclascd,
+				orgclascd,
+				bizclascd,
+				joindt,
+				retireddt,
+				extno,
+				peripheralnumber,
+				ctiuseyn,
+				msguseyn,
+				orgcd,
+				deleted,
+				loginable,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.syskind, 
+				src.userid,
+				src.korn_nm,
+				src.eng_nm,
+				src.level1cd,
+				src.level2cd,
+				src.level3cd,
+				src.grp_atht,
+				src.org_grd,
+				src.biz_clas_cd,
+				TO_TIMESTAMP(src.etco_dt, 'YYYY-MM-DD'),
+				(CASE WHEN (src.lvco_dt IS NULL OR src.lvco_dt = '') THEN null else TO_TIMESTAMP(src.lvco_dt, 'YYYY-MM-DD') END),
+				src.ext_no,
+				(CASE WHEN (REGEXP_LIKE(src.cti_lgin_id, '^[0-9]+$')) THEN src.cti_lgin_id ELSE null END),
+				src.cti_use_yn,
+				src.msgr_use_yn,
+				src.level3cd,
+				(CASE WHEN (src.lvco_dt IS NULL OR src.lvco_dt = '') THEN 'N'
+					  WHEN TO_TIMESTAMP(src.lvco_dt, 'YYYY-MM-DD') > SYSTIMESTAMP THEN 'N'
+					  ELSE 'Y' END),
+				(CASE WHEN (src.lvco_dt IS NULL OR src.lvco_dt = '') THEN 'Y'
+					  WHEN TO_TIMESTAMP(src.lvco_dt, 'YYYY-MM-DD') > SYSTIMESTAMP THEN 'Y'
+					  ELSE 'N' END),
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	
+	<select id="selectSkillList" parameterType="Map" resultType="SG">
+		SELECT code AS sgcd, data1 AS sgnm
+		FROM SWM.AX_COMMON_CODE_M accm 
+		WHERE GROUP_CD  = 'CFG_SKILL_CD'
+		AND #{SysKind} = substr(data1, 1,2)
+		ORDER BY sort
+	</select>
+	
+	<select id="selectSkillUserList" parameterType="Map" resultType="SGUser">
+		SELECT userid, ctilginid, usernm, level1cd, level1nm, level2cd, level2nm, level3cd, level3nm, level_ AS sglevel
+		FROM
+		(SELECT person_dbid, skill_dbid, level_ FROM cc.cfg_skill_level
+		 WHERE skill_dbid = #{SGCd}
+	 	<if test="SGLevel != '_ALL_'">
+		 AND level_=#{SGLevel}
+		</if>
+		) a,
+		(SELECT dbid, employee_id FROM cc.cfg_person) b,
+		(SELECT 
+			userid, peripheralnumber AS ctilginid, name AS usernm, 
+			level1cd, 
+			(SELECT org_nm FROM swm.t_apporg WHERE org_cd = level1cd AND rownum = 1) AS level1nm,
+			level2cd, 
+			(SELECT org_nm FROM swm.t_apporg WHERE org_cd = level2cd AND rownum = 1) AS level2nm,
+			level3cd, 
+			(SELECT org_nm FROM swm.t_apporg WHERE org_cd = level3cd AND rownum = 1) AS level3nm,
+			cticreatecd
+		FROM swm.t_user WHERE syskind = #{SysKind}) c
+		WHERE a.person_dbid = b.dbid 
+		AND b.employee_id = c.userid
+		AND cticreatecd = 'Y'
+	</select>
+	
+	<select id="selectNotInSkillUserList" parameterType="Map" resultType="SGUser">
+		SELECT 
+			userid, peripheralnumber AS ctilginid, name AS usernm, 
+			level1cd, 
+			(SELECT org_nm FROM swm.t_apporg WHERE org_cd = level1cd AND rownum = 1) AS level1nm,
+			level2cd, 
+			(SELECT org_nm FROM swm.t_apporg WHERE org_cd = level2cd AND rownum = 1) AS level2nm,
+			level3cd, 
+			(SELECT org_nm FROM swm.t_apporg WHERE org_cd = level3cd AND rownum = 1) AS level3nm,
+			NVL(sglevel,0) AS sglevel
+		FROM swm.t_user a LEFT OUTER JOIN 
+			(SELECT employee_id, level_ AS sglevel FROM cc.cfg_skill_level a, cc.cfg_person b
+			 WHERE a.person_dbid = b.dbid 
+			 AND skill_dbid = #{SGCd}) b ON a.userid = b.employee_id 
+		WHERE syskind = #{SysKind}
+		AND userid NOT IN (
+			SELECT employee_id FROM cc.cfg_skill_level a, cc.cfg_person b
+			WHERE a.PERSON_DBID = b.DBID 
+			AND skill_dbid = #{SGCd}
+			<if test="SGLevel != '_ALL_'">
+			AND level_ = #{SGLevel}
+			</if>
+			)
+		AND cticreatecd = 'Y'
+		<if test="Level1Cd != '_ALL_'">
+		AND level1cd = #{Level1Cd}
+		</if>
+		<if test="Level2Cd != '_ALL_'">
+		AND level2cd = #{Level2Cd}
+		</if>
+		<if test="Level3Cd != '_ALL_'">
+		AND level3cd = #{Level3Cd}
+		</if>
+	</select>
+	
+	<update id="mergeAppOrg" parameterType="Map">
+		MERGE INTO swm.t_apporg trg
+		USING 
+			(SELECT
+				#{SysKind}		AS syskind,
+				#{ORG_LVL}		AS org_lvl,
+				#{ORG_CD}		AS org_cd,
+				NVL(#{ORG_UP_CD}, ' ')	AS org_up_cd,
+				#{ORG_NM}		AS org_nm,
+				#{CNTR_TYP_CD}	AS cntr_typ_cd,
+				#{BIZ_CLAS_CD}	AS biz_clas_cd,
+				#{USE_YN}	 	AS use_yn,
+				#{SRT_SEQ}		AS srt_seq,
+				#{SRT_KEY}		AS srt_key
+			FROM dual) src
+		ON (	src.syskind 	= trg.syskind 
+			AND src.org_cd 		= trg.org_cd
+			AND src.org_lvl 	= trg.org_lvl
+			AND src.org_up_cd 	= trg.org_up_cd)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.org_nm     		= src.org_nm,
+				trg.cntr_typ_cd		= src.cntr_typ_cd,
+				trg.biz_clas_cd		= src.biz_clas_cd,
+				trg.use_yn     		= src.use_yn,
+				trg.srt_seq    		= src.srt_seq,
+				trg.srt_key    		= src.srt_key,
+				trg.lastmodifydate 	= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				syskind,
+				org_cd,
+				org_lvl,
+				org_up_cd,
+				org_nm,
+				cntr_typ_cd,
+				biz_clas_cd,
+				use_yn,
+				srt_seq,
+				srt_key,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.syskind,
+				src.org_cd,
+				src.org_lvl,
+				src.org_up_cd,
+				src.org_nm,
+				src.cntr_typ_cd,
+				src.biz_clas_cd,
+				src.use_yn,
+				src.srt_seq,
+				src.srt_key,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	
+	<select id="ctiDupCheck" parameterType="Map" resultType="Integer">
+		SELECT
+			COUNT(*)
+		FROM swm.t_user
+		WHERE userid = #{UserId}
+		AND cticreatecd = 'Y'
+	</select>
+</mapper>

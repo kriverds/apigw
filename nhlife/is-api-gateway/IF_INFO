@@ -1,0 +1,91 @@
+어플리케이션 서버아이디 서버명 생성시간 업데이트시간
+
+##EAI##
+0301 EAI 청약진행현황조회(실적) https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/apps/eai/IVZZMANBSH003
+SELECT * FROM swm.T_EAITMBIZDATA;
+0303 EAI 보이는ARS_콜센터현황조회 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/vars/eai/IVZZMOARSH001
+0304 EAI 채팅상담_통계연동 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/chat/eai/IVZZMOCSSH001
+SELECT * FROM swm.T_EAICHATRESULT_15MIN;
+0305 EAI 모바일앱_콜센터현황전송 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/mobile/eai/IVZZMOZZSH001
+
+##FILE##
+0306 NAS 챗봇_상담현황 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/chatbot/nas/CBSTATSINFO
+/fileif/cb/DAY/stat_info
+yyyyMMdd-1 01~23 yyyyMMdd 00
+0307 NAS 챗봇_캠페인마스터 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/chatbot/nas/CMSTATSINFO
+/fileif/cb/DAY/stat_info
+해당 시간 데이터 조회 yyyyMMddHH
+0308 NAS 챗봇_휴일 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/chatbot/nas/HOLINFO
+/fileif/sa/DAY/holiday_info
+0309 NAS 챗봇_알림톡결과 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/chatbot/nas/SMSSENDRESULT
+/fileif/ct/DAY/CC/CB
+
+0310 NAS WFMS_예측그룹코드_정보 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/CDINF
+/fileif/sa/DAY/WM/WFMS11
+0311 NAS WFMS_그룹별정원_정보 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/GROUPLIMITBIZKIND
+/fileif/wm/DAY/SA/WFMS33
+SELECT * FROM swm.t_group_limit_bizkind;
+0314 NAS WFMS_상담사콜_30분 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/SUMAGENT30MIN
+/fileif/sa/DAY/WM/WFMS10
+0315 NAS WFMS_상담사실적_일 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/SUMAGENTDAY
+/fileif/sa/DAY/WM/WFMS32
+0316 NAS WFMS_채팅집계_정보 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/SUMCHATGROUPDAY
+/fileif/sa/DAY/WM/WFMS28
+0317 NAS WFMS_CTIQ콜_30분 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/SUMHO30MIN
+/fileif/sa/DAY/WM/WFMS09
+0318 NAS WFMS_대표번호응대현황_월 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/SUMMRPMONTH
+/fileif/sa/DAY/WM/WFMS37
+0319 NAS WFMS_상담사상태_30분 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/SUMREASON30MIN
+/fileif/sa/DAY/WM/WFMS21
+0320 NAS WFMS_평가대상자_정보 https://tst.nhlife.co.kr:8403/apigw/api/v1/manual/wfms/nas/USEREVLT
+/fileif/wm/DAY/SA/WFMS35
+
+##HTTP##
+0321 REST 사용자스킬그룹_정보 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/getUserSGList?SysKind=CS&UserId=51580561&HandleUserId=PA2412013
+0322 REST 사용자_저장 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/setUser?SysKind=CS&UserId=13131313&KORN_NM=일삼일&ENG_NM=&Level1Cd=CSL&Level2Cd=CSL5&Level3Cd=CSL503&GRP_ATHT=A5&ORG_GRD=04&BIZ_CLAS_CD=01&ETCO_DT=20250327&LVCO_DT=&EXT_NO=&CTI_LGIN_ID=13131313&CTI_USE_YN=Y&MSGR_USE_YN=Y&HandleUserId=PA2412013
+SELECT * FROM swm.t_appuser WHERE userid = '13131313';
+DELETE swm.t_appuser WHERE userid = '13131313';
+DELETE swm.t_user WHERE userid = '13131313';
+0323 REST 비밀번호_초기화 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/initPassword?SysKind=CS&UserId=51580561&HandleUserId=PA2412013
+0324 REST 스킬그룹리스트_정보 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/getSGList?SysKind=CS&HandleUserId=PA2412013
+0325 REST 스킬그룹_사용자리스트_정보 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/getSGUserList?SysKind=CS&SGCd=107&SGLevel=1&HandleUserId=PA2412013
+0326 REST 스킬그룹_제외사용자리스트_정보 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/getNotInSGUserList?SysKind=CS&SGCd=107&SGLevel=_ALL_&Level1Cd=_ALL_&Level2Cd=_ALL_&Level3Cd=_ALL_&HandleUserId=PA2412013
+0327 REST 스킬그룹_사용자리스트_저장 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/setSGUserList?SysKind=CS&SGCd=107&SGLevel=_ALL_&SGLevelSel=1&UserId=51580561&HandleUserId=PA2412013
+http://localhost:8010/api/v1/apps/setSGUserList?SysKind=CS&SGCd=107&SGLevel=_ALL_&SGLevelSel=3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3%5E3&UserId=51280015%5E51280033%5E51280019%5E51280040%5E51280070%5E51280013%5E00400599%5E51681304%5E51580561%5E51581081%5E51681381%5E51681404%5E51681662%5E51681663%5E51580463%5E51381040%5E51381107%5E51380063%5E51380048%5E51481491%5E51481503%5E51381047%5E51481520%5E51481672%5E51280079%5E51280074%5E51280036%5E51280066%5E51280126%5E51280123%5E51280093%5E51280053%5E51280111%5E51380004%5E51380040%5E51380031%5E51380817%5E51580402%5E51481696%5E51481701%5E51481794%5E51481914%5E51580342%5E51580368%5E51580803%5E51581046%5E51782801%5E51681962%5E51681823%5E51682302%5E51883503%5E51883381%5E51883661%5E51782941%5E51782964%5E51682261%5E51580701%5E51681405%5E51580801%5E51681403%5E16370759%5E51580522%5E14370399%5E51580752%5E51581044%5E51581045%5E52185383%5E52185527%5E52185682%5E52185406%5E51783101%5E51883862%5E51883762%5E51884122%5E51984344%5E19470025%5E51884202%5E51984544%5E51984568%5E51883981%5E51984346%5E51884041%5E51884181%5E52085043%5E52085221%5E52085241%5E52085021%5E52085105%5E19470067%5E51984870%5E51984925%5E51984661%5E52084959%5E51984708%5E51984869%5E51984710%5E51984801%5E52084955%5E20370083%5E52286327&HandleUserId=PA2412013
+0328 REST 조직_저장 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/setOrgInfo?SysKind=TM&ORG_CD=TKS505&ORG_LVL=3&ORG_UP_CD=TKS5&ORG_NM=BC5실&CNTR_TYP_CD=&BIZ_CLAS_CD=&USE_YN=N&SRT_SEQ=4&SRT_KEY=TKS%5ETKS5%5ETKS505&HandleUserId=PA2412013
+SELECT * FROM swm.t_apporg WHERE srt_key='TKS^TKS5^TKS505';
+DELETE swm.t_apporg WHERE srt_key='TKS^TKS5^TKS505';
+0329 REST 사용자중복_체크 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/getUserDupCheck?SysKind=CS&UserId=51580561&HandleUserId=PA2412013
+0331 REST 사용자스킬그룹_저장 https://tst.nhlife.co.kr:8403/apigw/api/v1/apps/setUserSG?SysKind=CS&UserId=51580561&CTI_LGIN_ID=51580561&SGCd=103%5E104%5E105%5E106%5E107%5E110%5E111%5E112%5E113&SGLevel=3%5E2%5E1%5E3%5E2%5E1%5E3%5E2%5E1&HandleUserId=PA2412013
+0332 REST 로그인_연동 상담AP
+
+##SP##
+0333 DB 상담사_정보
+SELECT * FROM swm.t_appuser;
+0334 DB 조직_정보
+SELECT * FROM swm.t_apporg;
+0335 DB 콜백_정보
+SELECT * FROM swm.T_APPCALLBACK;
+0336 DB 휴가_정보
+SELECT * FROM swm.T_APPUSERVACATION;
+0337 DB 공휴일_정보
+SELECT * FROM swm.T_APPHOLIDAY;
+0338 DB 상담통화이력_정보
+SELECT * FROM swm.T_APPCOUNSEL;
+0339 DB 코드_정보
+SELECT * FROM swm.T_APPCODE;
+0340 DB 상담사_정보_전광판 > 상담AP
+
+0341 DB 공휴일_정보_TM
+SELECT * FROM swm.T_APPHOLIDAY_TM;
+0342 DB 상담사_콜실적_TM > 상담AP
+0343 DB 일자별_상담사실적_TM
+SELECT * FROM swm.T_APPTMAGENT_DAY;
+0344 DB 시간별_상담사실적_TM
+SELECT * FROM swm.T_APPTMAGENT_TIME;
+0345 DB 월별_상담사실적_TM
+SELECT * FROM swm.T_APPTMAGENT_MONTH;
+0346 DB 일자별_팀실적_TM
+SELECT * FROM swm.T_APPTMTEAM_DAY;
+0347 DB 월별_팀실적_TM
+SELECT * FROM swm.T_APPTMTEAM_MONTH;

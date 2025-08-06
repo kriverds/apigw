@@ -1,0 +1,142 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.soluvis.ds.apigw.v1.biz.apps.eai.mapper.AppsEaiMapper">
+	<insert id="insertEaiTmBizDataTemp" parameterType="Map">
+		INSERT ALL
+		<foreach collection="list" item="item" separator="">
+			INTO swm.t_merge_temp (val1, val2, val3, val4, val5, val6, val7, val8, val9, val10, val11, val12, val13, val14, val15, val16, val17, val18, val19)
+			VALUES(
+			#{item.poliNo}, #{item.lschgDtm}, #{item.prodLccd}, #{item.cntrDt}, #{item.psDt},
+			#{item.susTrmsDtm}, #{item.exDt}, #{item.cntrScd}, #{item.cntrDtlScd}, #{item.nbptMbp},
+			#{item.nbptMmCvav}, #{item.clctBrofBrCd}, #{item.clpPsnNo}, #{item.prodNm}, #{item.rvcyCd},
+			#{item.cntrmNm}, #{item.isrdNm}, #{item.tprm}, #{item.uwRsltCd})
+		</foreach>
+		SELECT * FROM dual
+	</insert>
+	<update id="mergeEaiTmBizData">
+		MERGE INTO swm.t_eaitmbizdata trg
+		USING 
+			(SELECT * FROM (
+				SELECT
+					val1				AS polino,
+					val2				AS lschgdtm,
+					val3				AS prodlccd,
+					val4				AS cntrdt,
+					val5				AS psdt,
+					val6				AS sustrmsdtm,
+					val7				AS exdt,
+					val8				AS cntrscd,
+					val9				AS cntrdtlscd,
+					val10				AS nbptmbp,
+					val11				AS nbptmmcvav,
+					val12				AS clctbrofbrcd,
+					val13				AS clppsnno,
+					val14				AS prodnm,
+					val15				AS rvcycd,
+					val16				AS cntrmnm,
+					val17				AS isrdnm,
+					val18				AS tprm,
+					val19				AS uwrsltcd,
+					ROW_number() OVER (PARTITION BY val1 ORDER BY val19) AS orn,
+					SYSTIMESTAMP		AS lastupdatedate
+				FROM swm.t_merge_temp) t
+			WHERE orn = 1) src
+		ON (src.poliNo = trg.poliNo)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.lschgdtm    	= src.lschgdtm,
+				trg.prodlccd    	= src.prodlccd,
+				trg.cntrdt    		= src.cntrdt,
+				trg.psdt    		= src.psdt,
+				trg.sustrmsdtm    	= src.sustrmsdtm,
+				trg.exdt    		= src.exdt,
+				trg.cntrscd    		= src.cntrscd,
+				trg.cntrdtlscd    	= src.cntrdtlscd,
+				trg.nbptmbp    		= src.nbptmbp,
+				trg.nbptmmcvav    	= src.nbptmmcvav,
+				trg.clctbrofbrcd    = src.clctbrofbrcd,
+				trg.clppsnno    	= src.clppsnno,
+				trg.prodnm    		= src.prodnm,
+				trg.rvcycd    		= src.rvcycd,
+				trg.cntrmnm    		= src.cntrmnm,
+				trg.isrdnm    		= src.isrdnm,
+				trg.tprm    		= src.tprm,
+				trg.lastupdatedate	= src.lastupdatedate,
+				trg.lastmodifydate 	= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				polino,
+				lschgdtm,
+				prodlccd,
+				cntrdt,
+				psdt,
+				sustrmsdtm,
+				exdt,
+				cntrscd,
+				cntrdtlscd,
+				nbptmbp,
+				nbptmmcvav,
+				clctbrofbrcd,
+				clppsnno,
+				prodnm,
+				rvcycd,
+				cntrmnm,
+				isrdnm,
+				tprm,
+				uwrsltcd,
+				lastupdatedate,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.polino,
+				src.lschgdtm,
+				src.prodlccd,
+				src.cntrdt,
+				src.psdt,
+				src.sustrmsdtm,
+				src.exdt,
+				src.cntrscd,
+				src.cntrdtlscd,
+				src.nbptmbp,
+				src.nbptmmcvav,
+				src.clctbrofbrcd,
+				src.clppsnno,
+				src.prodnm,
+				src.rvcycd,
+				src.cntrmnm,
+				src.isrdnm,
+				src.tprm,
+				src.uwrsltcd,
+				src.lastupdatedate,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	
+	<select id="getBrCdList" resultType="CamelHashMap">
+		SELECT 	
+			smlcd AS br_cd,
+		 	smlnm,
+		 	dscnm
+		FROM 	swm.t_cdinf
+		WHERE 	deleted = 'N'
+		AND		lrgcd = 'BC_N092'
+		ORDER BY seq
+	</select>
+	
+	<update id="callSumAppTmAgentTime" parameterType="Map">
+		CALL swm.p_set_sum_apptmagent_time(#{sdt}, #{edt})
+	</update>
+	<update id="callSumAppTmAgentDay" parameterType="Map">
+		CALL swm.p_set_sum_apptmagent_day(#{sdt}, #{edt})
+	</update>
+	<update id="callSumAppTmTeamDay" parameterType="Map">
+		CALL swm.p_set_sum_apptmteam_day(#{sdt}, #{edt})
+	</update>
+	<update id="callSumAppTmTeamMonth" parameterType="Map">
+		CALL swm.p_set_sum_apptmteam_month(#{sdt}, #{edt})
+	</update>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "config/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.soluvis.ds.apigw.v1.util.CamelHashMap" alias="CamelHashMap"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.chatbot.nas.vo.CbStatsInfo" alias="CbStatsInfo"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.chatbot.nas.vo.CmStatsInfo" alias="CmStatsInfo"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.chatbot.nas.vo.HolInfo" alias="HolInfo"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.chatbot.nas.vo.SmsSendResult" alias="SmsSendResult"/>
+		
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.CdInf" alias="CdInf"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.GroupLimitBizKind" alias="GroupLimitBizKind"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.SumAgent30min" alias="SumAgent30min"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.SumAgentDay" alias="SumAgentDay"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.SumChatGroupDay" alias="SumChatGroupDay"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.SumHo30min" alias="SumHo30min"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.SumMrpMonth" alias="SumMrpMonth"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.SumReason30min" alias="SumReason30min"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.wfms.nas.vo.UserEvlt" alias="UserEvlt"/>
+		
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.apps.rest.vo.SG" alias="SG"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.apps.rest.vo.SGUser" alias="SGUser"/>
+		<typeAlias type="com.soluvis.ds.apigw.v1.biz.apps.rest.vo.UserSG" alias="UserSG"/>
+	</typeAliases>
+</configuration>

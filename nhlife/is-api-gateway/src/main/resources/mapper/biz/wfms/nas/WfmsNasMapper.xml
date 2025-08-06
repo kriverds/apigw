@@ -1,0 +1,335 @@
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.soluvis.ds.apigw.v1.biz.wfms.nas.mapper.WfmsNasMapper">
+	
+	<select id="selectCdInf" resultType="CdInf">
+		SELECT 
+			lrgcd 	AS lrgcd,
+			lrgnm 	AS lrgnm,
+			smlcd 	AS smlcd,
+			smlnm 	AS smlnm,
+			deleted AS deleted,
+			'0' 	AS upcd
+		FROM swm.t_cdinf
+		WHERE lrgcd IN ('CTIQ_L')
+		UNION ALL
+		SELECT 
+			lrgcd 	AS lrgcd,
+			lrgnm 	AS lrgnm,
+			smlcd 	AS smlcd,
+			smlnm 	AS smlnm,
+			deleted AS deleted,
+			ctiqcd 	AS upcd
+		FROM swm.t_cdinf
+		WHERE lrgcd IN ('CTIQ_M')
+	</select>
+	
+	<insert id="insertGroupLimitBizKindTemp" parameterType="Map">
+		INSERT ALL
+		<foreach collection="list" item="item" separator="">
+			INTO swm.t_merge_temp (val1, val2, val3, val4, val5, num1, val6)
+			VALUES (#{item.dateFrom}, #{item.sysKind}, #{item.arrCenterCd}, #{item.arrGroupCd}, #{item.bizClasCd}, 
+			#{item.limitPerson}, #{item.agentId})
+		</foreach>
+		SELECT * FROM dual
+	</insert>
+	<update id="mergeGroupLimitBizKind">
+		MERGE INTO swm.t_group_limit_bizkind trg
+		USING 
+			(SELECT dt, syskind, level1cd, level2cd, bizclascd, updateuserid, MAX(limitperson) AS limitperson, MAX(updatedatetime) AS updatedatetime 
+			FROM 
+				(SELECT
+					val1					AS dt,
+					val2					AS syskind,
+					NVL(val3, ' ')			AS level1cd,
+					NVL(val4, ' ')			AS level2cd,
+					NVL(val5, ' ')			AS bizclascd,
+					num1					AS limitperson,
+					val6					AS updateuserid,
+					SYSTIMESTAMP			AS updatedatetime
+				FROM swm.t_merge_temp) a
+			GROUP BY dt, syskind, level1cd, level2cd, bizclascd, updateuserid ) src
+		ON (	src.dt 					= trg.dt
+			AND src.syskind 			= trg.syskind
+			AND src.level1cd 			= trg.level1cd
+			AND src.level2cd 			= trg.level2cd
+			AND src.bizclascd 			= trg.bizclascd)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.limitperson    		= src.limitperson,
+				trg.updateuserid    	= src.updateuserid,
+				trg.updatedatetime 		= src.updatedatetime,
+				trg.lastmodifydate 		= SYSTIMESTAMP
+		WHEN NOT MATCHED THEN
+			INSERT (
+				dt,
+				syskind,
+				level1cd,
+				level2cd,
+				bizclascd,
+				limitperson,
+				updateuserid,
+				updatedatetime,
+				createdate,
+				lastmodifydate
+			)
+			VALUES (
+				src.dt,
+				src.syskind,
+				src.level1cd,
+				src.level2cd,
+				src.bizclascd,
+				src.limitperson,
+				src.updateuserid,
+				src.updatedatetime,
+				SYSTIMESTAMP,
+				SYSTIMESTAMP
+			)
+	</update>
+	
+	<select id="selectSumChatGroupDay" parameterType="Map" resultType="SumChatGroupDay">
+		SELECT 
+			hd,
+			dt,
+			wk,
+			mrp,
+			accountgroupname,
+			accountgroupid,
+			allcalls,
+			toagent,
+			abandon,
+			callback,
+			answer,
+			answer10s AS servicelevelcnt
+		FROM swm.t_sum_chat_day_group
+		WHERE dt >= #{sdt} AND dt <![CDATA[<]]>= #{edt}
+		ORDER BY dt, accountgroupid
+	</select>
+	
+	<insert id="insertUserEvltTemp" parameterType="Map">
+		INSERT ALL
+		<foreach collection="list" item="item" separator="">
+			INTO swm.t_merge_temp (val1, val2, val3)
+			VALUES (#{item.syskind}, #{item.userId}, #{item.evltYn})
+		</foreach>
+		SELECT * FROM dual
+	</insert>
+	<update id="updateUserEvlt" parameterType="Map">
+		MERGE INTO swm.t_user trg
+		USING 
+			(SELECT syskind, userid, max(evltyn) AS evltyn
+			FROM 
+			(SELECT
+				val1					AS syskind,
+				val2					AS userid,
+				val3					AS evltyn
+			FROM swm.t_merge_temp) a
+			GROUP BY syskind, userid) src
+		ON (	src.syskind 			= trg.syskind
+			AND src.userid 				= trg.userid)
+		WHEN MATCHED THEN
+			UPDATE SET
+				trg.evltyn    			= src.evltyn,
+				trg.lastmodifydate 		= SYSTIMESTAMP
+	</update>
+	
+	<select id="getSumAgent30min" statementType="CALLABLE" parameterType="Map">
+		{CALL swm.p_get_nasWfm_SumAgent_30min(#{sdt}, #{edt}, #{cursor, mode=OUT, jdbcType=CURSOR, resultMap=SumAgent30min})}
+	</select>
+	<resultMap id="SumAgent30min" type="SumAgent30min">
+		<result column="HD" property="hd"/>
+		<result column="WK" property="wk"/>
+		<result column="DT" property="dt"/>
+		<result column="HH" property="hh"/>
+		<result column="MM" property="mm"/>
+		<result column="LEVEL1CD" property="level1Cd"/>
+		<result column="LEVEL2CD" property="level2Cd"/>
+		<result column="LEVEL3CD" property="level3Cd"/>
+		<result column="PERIPHERALNUMBER" property="peripheralNumber"/>
+		<result column="MRP" property="mrp"/>
+		<result column="MENUCODE" property="menuCode"/>
+		<result column="IB_RNA" property="ibRna"/>
+		<result column="IB" property="ib"/>
+		<result column="ANSWER10S" property="answer10s"/>
+		<result column="ANSWER20S" property="answer20s"/>
+		<result column="IB_TALKTIME" property="ibTalkTime"/>
+		<result column="OB_TRY" property="obTry"/>
+		<result column="OB_DELAYTIME" property="obDelayTime"/>
+		<result column="OB_ANSWER" property="obAnswer"/>
+		<result column="OB_TALKTIME" property="obTalkTime"/>
+		<result column="HOLDTIME" property="holdTime"/>
+		<result column="PDS" property="pds"/>
+		<result column="PDS_TALKTIME" property="pdsTalkTime"/>
+		<result column="PT_ANSWER" property="ptAnswer"/>
+		<result column="PT_REQUEST" property="ptRequest"/>
+		<result column="PT_TALKTIME" property="ptTalkTime"/>
+		<result column="HOLD" property="hold"/>
+		<result column="IB_MOD" property="ibMod"/>
+	</resultMap>
+	
+	<select id="getSumAgentDay" statementType="CALLABLE" parameterType="Map">
+		{CALL swm.p_get_nasWfm_SumAgent_Day(#{dateFrom}, #{dateTo},
+		#{arrCenterCd},#{arrGroupCd},#{arrTeamCd},#{arrAgentId},#{checkGb},#{syskind},
+		#{cursor, mode=OUT, jdbcType=CURSOR, resultMap=SumAgentDay})}
+	</select>
+	<resultMap id="SumAgentDay" type="SumAgentDay">
+		<result column="DT" property="dt"/>
+		<result column="LEVEL1CD" property="level1Cd"/>
+		<result column="LEVEL2CD" property="level2Cd"/>
+		<result column="LEVEL3CD" property="level3Cd"/>
+		<result column="LEVEL1NM" property="level1Nm"/>
+		<result column="LEVEL2NM" property="level2Nm"/>
+		<result column="LEVEL3NM" property="level3Nm"/>
+		<result column="SORTORD" property="sortOrd"/>
+		<result column="USERID" property="userId"/>
+		<result column="USERNM" property="userNm"/>
+		<result column="WORKPERIOD" property="workPeriod"/>
+		<result column="IB_RNA" property="ibRna"/>
+		<result column="IB" property="ib"/>
+		<result column="ANSWER10S" property="answer10s"/>
+		<result column="ANSWER20S" property="answer20s"/>
+		<result column="LOGINTIME" property="loginTime"/>
+		<result column="IB_TALKTIME" property="ibTalkTime"/>
+		<result column="OB_TRY" property="obTry"/>
+		<result column="OB_DELAYTIME" property="obDelayTime"/>
+		<result column="OB_ANSWER" property="obAnswer"/>
+		<result column="OB_TALKTIME" property="obTalkTime"/>
+		<result column="CALLTIME" property="callTime"/>
+		<result column="CALLTIME_AVG" property="callTimeAvg"/>
+		<result column="GROUPRANK" property="groupRank"/>
+		<result column="IB_TALKTIME_AVG" property="ibTalkTimeAvg"/>
+		<result column="OB_TRY_AVG" property="obTryAvg"/>
+		<result column="OB_ANSWER_AVG" property="obAnswerAvg"/>
+		<result column="REASON1_TIME_AVG" property="reason1TimeAvg"/>
+		<result column="TOTALCALL" property="totalCall"/>
+		<result column="HOLDTIME" property="holdTime"/>
+		<result column="PDS" property="pds"/>
+		<result column="PT_ANSWER" property="ptAnswer"/>
+		<result column="PT_REQUEST" property="ptRequest"/>
+		<result column="PT_TALKTIME" property="ptTalkTime"/>
+		<result column="REASON" property="reason"/>
+		<result column="REASON0" property="reason0"/>
+		<result column="REASON1" property="reason1"/>
+		<result column="REASON2" property="reason2"/>
+		<result column="REASON3" property="reason3"/>
+		<result column="REASON4" property="reason4"/>
+		<result column="REASON5" property="reason5"/>
+		<result column="REASON6" property="reason6"/>
+		<result column="REASON7" property="reason7"/>
+		<result column="REASON_TIME" property="reasonTime"/>
+		<result column="REASON1_TIME" property="reasonTime1"/>
+		<result column="REASON2_TIME" property="reasonTime2"/>
+		<result column="REASON3_TIME" property="reasonTime3"/>
+		<result column="REASON4_TIME" property="reasonTime4"/>
+		<result column="REASON5_TIME" property="reasonTime5"/>
+		<result column="REASON6_TIME" property="reasonTime6"/>
+		<result column="REASON7_TIME" property="reasonTime7"/>
+		<result column="READYTIME" property="readyTime"/>
+		<result column="REASON_TIME_TOTAL" property="reasonTimeTotal"/>
+		<result column="COLOR" property="color"/>
+		<result column="OB_TOTALTIME" property="obTotalTime"/>
+		<result column="OB_TOTAL_AVG" property="obTotalAvg"/>
+	</resultMap>
+	
+	<select id="getSumHo30min" statementType="CALLABLE" parameterType="Map">
+		{CALL swm.p_get_nasWfm_SumHo_30min(#{sdt}, #{edt}, #{cursor, mode=OUT, jdbcType=CURSOR, resultMap=SumHo30min})}
+	</select>
+	<resultMap id="SumHo30min" type="SumHo30min">
+		<result column="HD" property="hd"/>
+		<result column="WK" property="wk"/>
+		<result column="DT" property="dt"/>
+		<result column="HH" property="hh"/>
+		<result column="MM" property="mm"/>
+		<result column="MRP" property="mrp"/>
+		<result column="CTIQ" property="ctiq"/>
+		<result column="ALLCALLS" property="allCalls"/>
+		<result column="TOAGENT" property="toAgent"/>
+		<result column="ABANDON" property="abandon"/>
+		<result column="ABANDON10S" property="abandon10s"/>
+		<result column="ABANDON20S" property="abandon20s"/>
+		<result column="ABANDON30S" property="abandon30s"/>
+		<result column="ABANDON40S" property="abandon40s"/>
+		<result column="ABANDON50S" property="abandon50s"/>
+		<result column="ABANDON60S" property="abandon60s"/>
+		<result column="ABANDON120S" property="abandon120s"/>
+		<result column="ABANDON180S" property="abandon180s"/>
+		<result column="ABANDON300S" property="abandon300s"/>
+		<result column="CALLBACK" property="callback"/>
+		<result column="ANSWER" property="answer"/>
+		<result column="ANSWER10S" property="answer10s"/>
+		<result column="ANSWER20S" property="answer20s"/>
+		<result column="ANSWER30S" property="answer30s"/>
+		<result column="ANSWER40S" property="answer40s"/>
+		<result column="ANSWER50S" property="answer50s"/>
+		<result column="ANSWER60S" property="answer60s"/>
+		<result column="ANSWER120S" property="answer120s"/>
+		<result column="ANSWER180S" property="answer180s"/>
+		<result column="ANSWER300S" property="answer300s"/>
+		<result column="TALKTIME" property="talkTime"/>
+		<result column="RINGTIME" property="ringTime"/>
+		<result column="TOVOCALARS" property="toVocalArs"/>
+		<result column="TOVISUALARS" property="toVisualArs"/>
+		<result column="FROMVOCALARS" property="fromVocalArs"/>
+		<result column="FROMVISUALARS" property="fromVisualArs"/>
+		<result column="CALLENDATQUEUE" property="callEndAtQueue"/>
+		<result column="NETQTIME" property="netQTime"/>
+		<result column="LOCALQTIME" property="localQTime"/>
+	</resultMap>
+	
+	<select id="getSumMrpMonth" statementType="CALLABLE" parameterType="Map">
+		{CALL swm.p_get_nasWfm_SumMrp_Month(#{dateFrom}, #{dateTo}, #{cursor, mode=OUT, jdbcType=CURSOR, resultMap=SumMrpMonth})}
+	</select>
+	<resultMap id="SumMrpMonth" type="SumMrpMonth">
+		<result column="DT" property="dt"/>
+		<result column="NAME" property="name"/>
+		<result column="TOAGENT" property="toAgent"/>
+		<result column="ANSWER" property="answer"/>
+		<result column="ANSWER10S" property="answer10s"/>
+		<result column="ANSWER20S" property="answer20s"/>
+		<result column="SL" property="sl"/>
+		<result column="SORTORD" property="sortOrd"/>
+	</resultMap>
+	
+	<select id="getSumReason30min" statementType="CALLABLE" parameterType="Map">
+		{CALL swm.p_get_nasWfm_SumReason_30min(#{sdt}, #{edt}, #{cursor, mode=OUT, jdbcType=CURSOR, resultMap=SumReason30min})}
+	</select>
+	<resultMap id="SumReason30min" type="SumReason30min">
+		<result column="HD" property="hd"/>
+		<result column="WK" property="wk"/>
+		<result column="DT" property="dt"/>
+		<result column="HH" property="hh"/>
+		<result column="MM" property="mm"/>
+		<result column="LEVEL1CD" property="level1Cd"/>
+		<result column="LEVEL2CD" property="level2Cd"/>
+		<result column="LEVEL3CD" property="level3Cd"/>
+		<result column="PERIPHERALNUMBER" property="peripheralNumber"/>
+		<result column="LOGINTIME" property="loginTime"/>
+		<result column="LOGOUTTIME" property="logoutTime"/>
+		<result column="REASON" property="reason"/>
+		<result column="REASON0" property="reason0"/>
+		<result column="REASON1" property="reason1"/>
+		<result column="REASON2" property="reason2"/>
+		<result column="REASON3" property="reason3"/>
+		<result column="REASON4" property="reason4"/>
+		<result column="REASON5" property="reason5"/>
+		<result column="REASON6" property="reason6"/>
+		<result column="REASON7" property="reason7"/>
+		<result column="REASON8" property="reason8"/>
+		<result column="REASON9" property="reason9"/>
+		<result column="REASON_TIME" property="reasonTime"/>
+		<result column="REASON0_TIME" property="reasonTime0"/>
+		<result column="REASON1_TIME" property="reasonTime1"/>
+		<result column="REASON2_TIME" property="reasonTime2"/>
+		<result column="REASON3_TIME" property="reasonTime3"/>
+		<result column="REASON4_TIME" property="reasonTime4"/>
+		<result column="REASON5_TIME" property="reasonTime5"/>
+		<result column="REASON6_TIME" property="reasonTime6"/>
+		<result column="REASON7_TIME" property="reasonTime7"/>
+		<result column="REASON8_TIME" property="reasonTime8"/>
+		<result column="REASON9_TIME" property="reasonTime9"/>
+		<result column="READYTIME" property="readyTime"/>
+	</resultMap>
+	
+</mapper>
