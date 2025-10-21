@@ -55,7 +55,7 @@ public class VarsEaiScheduler {
 	 */
 	@Async
 	@Scheduled(cron = "${scheduler.eai.vars}")
-	@SchedulerLock(name = "executeIVZZMOARSH001Batch", lockAtLeastFor = "4s", lockAtMostFor = "4s")
+//	@SchedulerLock(name = "executeIVZZMOARSH001Batch", lockAtLeastFor = "4s", lockAtMostFor = "4s")
 	public void executeIVZZMOARSH001Batch() throws Exception {
 		Calendar sCal = Calendar.getInstance();
 		UUID uuid = UUID.randomUUID();
@@ -77,6 +77,6 @@ public class VarsEaiScheduler {
 		Calendar eCal = Calendar.getInstance();
 		logger.info("[{}] duration TimeInMillis[{}]", uuid, eCal.getTimeInMillis()-sCal.getTimeInMillis());
 		logger.info("[{}] executeIVZZMOARSH001Batch *End...", uuid);
-		Thread.sleep(1_000L);
+//		Thread.sleep(1_000L);
 	}
 }

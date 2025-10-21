@@ -21,6 +21,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.EventLoopGroup;
 import io.netty.util.AttributeKey;
+import io.netty.util.internal.PlatformDependent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -113,8 +114,10 @@ public class CommonEaiClientHandler extends ChannelInboundHandlerAdapter {
 	 */
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		long usedDirectMemory = PlatformDependent.usedDirectMemory();
+		System.out.println("Used Direct Memory: " + usedDirectMemory + " bytes");
 		ByteBuf byteBuf = (ByteBuf) msg;
-		byteBuf.retain();
+//		byteBuf.retain(); // 해당 코드 다이렉트 메모리 릭 발생
 		
 		compositeByteBuf.addComponent(true, byteBuf);
 		compositeByteBuf.writerIndex(compositeByteBuf.capacity());
@@ -126,7 +129,7 @@ public class CommonEaiClientHandler extends ChannelInboundHandlerAdapter {
 		byte[] b = new byte[length];
 		byteBuf.readBytes(b);
 		
-		logger.info("[{}] channelRead message length[{}]>>{}", uuid, length, EaiUtil.toString(b));
+//		logger.info("[{}] channelRead message length[{}]>>{}", uuid, length, EaiUtil.toString(b));
 		
 		byteBuf.resetReaderIndex();
 	}

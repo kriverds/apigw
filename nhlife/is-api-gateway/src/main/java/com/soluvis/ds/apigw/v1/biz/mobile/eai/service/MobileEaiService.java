@@ -71,9 +71,11 @@ public class MobileEaiService {
 		
 		String mrp = SEARCH_MRP;
 		
-		Map<String,Object> qMap = getWaitCnt();
-		String waitCustCnt = qMap.get("waitCustCnt")==null?"0":qMap.get("waitCustCnt").toString();
-		String workTimeYn = qMap.get("workTimeYn")==null?"N":qMap.get("workTimeYn").toString();
+//		Map<String,Object> qMap = getWaitCnt();
+//		String waitCustCnt = qMap.get("waitCustCnt")==null?"0":qMap.get("waitCustCnt").toString();
+//		String workTimeYn = qMap.get("workTimeYn")==null?"N":qMap.get("workTimeYn").toString();
+		String waitCustCnt = "0";
+		String workTimeYn = "Y";
 		logger.info("[{}] IVZZMOZZSH001Req MRP[{}] waitCustCnt[{}] workTimeYn[{}]", uuid, mrp, waitCustCnt, workTimeYn);
 		
 		IVZZMOZZSH001Req req = new IVZZMOZZSH001Req.Builder()

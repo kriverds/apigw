@@ -28,6 +28,7 @@ public class EaiUtil {
 	public static void disconnect(ChannelHandlerContext ctx, CompositeByteBuf buf, UUID uuid) {
 		ctx.close();
 		if(buf != null && buf.refCnt() > 0) {
+			logger.info("[{}] buffer cnt>>{}", uuid, buf.refCnt());
 			buf.release();
 		}
 		logger.info("[{}] {}", uuid, "disconnect channel");

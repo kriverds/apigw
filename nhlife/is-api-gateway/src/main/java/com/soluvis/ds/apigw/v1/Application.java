@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
+import io.netty.util.ResourceLeakDetector;
+import io.netty.util.ResourceLeakDetector.Level;
+
 /**
  * @Class 		: Application
  * @date   		: 2025. 4. 8.
@@ -22,6 +25,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class Application {
 
 	public static void main(String[] args) {
+//		ResourceLeakDetector.setLevel(Level.PARANOID);
 		SpringApplication.run(Application.class, args);
 	}
 

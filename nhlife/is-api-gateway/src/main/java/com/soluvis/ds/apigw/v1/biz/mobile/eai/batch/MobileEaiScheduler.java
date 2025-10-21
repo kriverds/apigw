@@ -55,7 +55,7 @@ public class MobileEaiScheduler {
 	 */
 	@Async
 	@Scheduled(cron = "${scheduler.eai.mobile}")
-	@SchedulerLock(name = "executeIVZZMOZZSH001Batch", lockAtLeastFor = "4s", lockAtMostFor = "4s")
+//	@SchedulerLock(name = "executeIVZZMOZZSH001Batch", lockAtLeastFor = "4s", lockAtMostFor = "4s")
 	public void executeIVZZMOZZSH001Batch() throws Exception {
 		Calendar sCal = Calendar.getInstance();
 		UUID uuid = UUID.randomUUID();
@@ -77,6 +77,6 @@ public class MobileEaiScheduler {
 		Calendar eCal = Calendar.getInstance();
 		logger.info("[{}] duration TimeInMillis[{}]", uuid, eCal.getTimeInMillis()-sCal.getTimeInMillis());
 		logger.info("[{}] executeIVZZMOZZSH001Batch *End...", uuid);
-		Thread.sleep(1_000L);
+//		Thread.sleep(1_000L);
 	}
 }

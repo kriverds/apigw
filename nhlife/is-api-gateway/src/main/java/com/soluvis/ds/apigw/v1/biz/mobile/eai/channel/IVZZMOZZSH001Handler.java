@@ -54,7 +54,7 @@ public class IVZZMOZZSH001Handler extends CommonEaiClientHandler{
 	    		logger.info("[{}] EAI_ETX recbeived", getUuid());
 	    		
 	    		byte[] bMsg = EaiUtil.read(getCompositeByteBuf());
-	    		logger.info("[{}] Server message>>{}", getUuid(), EaiUtil.toString(bMsg));
+//	    		logger.info("[{}] Server message>>{}", getUuid(), EaiUtil.toString(bMsg));
 				
 				IVZZMOZZSH001Res res = new IVZZMOZZSH001Res(bMsg);
 				logger.info("[{}] {}", getUuid(), res);
